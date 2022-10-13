@@ -1,3 +1,17 @@
+<template>
+  <div>
+    <App v-if="state.showMenu" :id="state.userInfo.id">
+      <AppLayout logo="平台管理系统" :menuConfig="state.userInfo.menus">
+        <RouterView />
+      </AppLayout>
+      <el-backtop :right="100" :bottom="100" />
+    </App>
+    <div v-else>
+      <RouterView />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { RouterView, useRouter } from 'vue-router'
 import { reactive, onMounted } from 'vue'
@@ -13,37 +27,24 @@ const state = reactive({
   showMenu: true
 })
 
-// 全局路由-这个比react-router好用
-router.beforeEach((to, from, next) => {
-  if (to.path == '/login') {
-    next()
-  } else {
-    if (!getStorage("token")) {
-      next({ path: '/login' })
-    } else {
-      next()
-    }
-  }
-  state.showMenu = !noMenu.includes(to.path)
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.path == '/login') {
+//     next()
+//   } else {
+//     if (!getStorage("token")) {
+//       next({ path: '/login' })
+//     } else {
+//       next()
+//     }
+//   }
+//   state.showMenu = !noMenu.includes(to.path)
+// })
+
 onMounted(async () => {
-  // state.userInfo = await Api.getUserInfo()
+  state.userInfo = await Api.getUserInfo()
 })
 </script>
 
-<template>
-  <div>
-    <App v-if="state.showMenu" :id="state.userInfo.id || 1">
-      <AppLayout logo="平台管理系统" :menuConfig="state.userInfo.menus">
-        <RouterView />
-      </AppLayout>
-      <el-backtop :right="100" :bottom="100" />
-    </App>
-    <div v-else>
-      <RouterView />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 
