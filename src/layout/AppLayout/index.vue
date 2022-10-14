@@ -3,42 +3,39 @@
     <div class="app-sider">
       <div class="logo">{{props.logo}}</div>
       <div class="side-nav">
-        <!-- <SiderNav></SiderNav> -->
+        <SiderNav :sideNavMenu="sideNavMenu"></SiderNav>
       </div>
     </div>
     <div class="app-content">
       <div class="app-header">
         <div class="top-nav">
-          <TopNav :topId="topId" :setTopId="setTopId" :menuConfig="props.menuConfig" class="top-menu"></TopNav>
+          <TopNav :menuConfig="props.menuConfig" @setSideNavMenu="setSideNavMenu"
+            class="top-menu"></TopNav>
         </div>
-        <!-- <div class="extra">{extra}</div> -->
+        <div class="extra">
+          <slot name="user"></slot>
+        </div>
       </div>
       <div class="app-center">
-        <!-- <Center>
-          <slot></slot>
-        </Center> -->
+        <!-- <Center> -->
+          <slot name="router"></slot>
+        <!-- </Center> -->
       </div>
     </div>
-    <div>吕肥肥{{topId}}</div>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-// import { TopNav, SiderNav, Center } from './components'
 import TopNav from './TopNav.vue'
+import SiderNav from './SiderNav.vue'
+import Center from './Center.vue'
 
 const props = defineProps(['logo', 'menuConfig', 'extra'])
 
-let topId = ref(null)
-const menuConfig = ref([])
-
-
-function setTopId(id) {
-  topId = id
-  console.log(topId)
-}
-
-
+let sideNavMenu = ref([]);
+const setSideNavMenu = (list) => {
+  sideNavMenu.value = list;
+};
 
 </script>
 <style lang="less">
@@ -90,6 +87,7 @@ function setTopId(id) {
         flex: 1;
         margin-right: 20px;
         overflow: hidden;
+        height: 64px;
 
         .top-menu {
           line-height: @topH;

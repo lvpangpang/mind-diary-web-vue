@@ -38,11 +38,10 @@ const login = (formEl) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (valid) {
-      const { token } = Api.login(ruleForm)
+      const { token } = await Api.login(ruleForm)
       setStorage("token", token)
       const url = "/"
       window.location.href = url
-
     }
   })
 }

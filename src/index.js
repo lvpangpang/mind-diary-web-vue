@@ -9,6 +9,7 @@ import router from '@/router'
 import './assets/main.css'
 
 const { MODE } =import.meta.env
+console.log(getStorage('token'))
 http.setConfig({
   baseURL:
     MODE === "development"
