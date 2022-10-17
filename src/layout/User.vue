@@ -50,7 +50,6 @@ const popoverRef = ref()
     >span {
       font-size: 12px;
       background: #2db7f5;
-      color: #fff;
       padding: 2px 6px;
       border-radius: 2px;
     }

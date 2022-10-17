@@ -1,7 +1,7 @@
 <template>
-  <el-menu background-color="#001529" :default-active="topId+''" class="el-menu-demo" mode="horizontal">
+  <el-menu :default-active="topId+''" class="el-menu-demo" mode="horizontal">
     <el-menu-item v-for="item in props.menuConfig" :index="item.id +''"
-      :style="{height: 64, lineHeight: '64px', color: '#fff'}"  @click="topClick(item.id)">{{item.title}}</el-menu-item>
+      :style="{height: 64, lineHeight: '64px'}"  @click="topClick(item.id)">{{item.title}}</el-menu-item>
   </el-menu>
 </template>
 <script setup>

@@ -9,17 +9,16 @@
     <div class="app-content">
       <div class="app-header">
         <div class="top-nav">
-          <TopNav :menuConfig="props.menuConfig" @setSideNavMenu="setSideNavMenu"
-            class="top-menu"></TopNav>
+          <TopNav :menuConfig="props.menuConfig" @setSideNavMenu="setSideNavMenu" class="top-menu"></TopNav>
         </div>
         <div class="extra">
           <slot name="user"></slot>
         </div>
       </div>
       <div class="app-center">
-        <!-- <Center> -->
+        <Center :menuConfig="props.menuConfig">
           <slot name="router"></slot>
-        <!-- </Center> -->
+        </Center>
       </div>
     </div>
   </div>
@@ -45,14 +44,11 @@ const setSideNavMenu = (list) => {
   display: flex;
 
   .app-sider {
-    background: #fff;
     min-height: 100vh;
     width: 200px;
 
     .logo {
-      background: #001529;
       height: @topH;
-      color: #fff;
       font-size: 18px;
       overflow: hidden;
       white-space: nowrap;
@@ -66,10 +62,6 @@ const setSideNavMenu = (list) => {
       overflow-x: hidden;
       max-height: 100vh;
       padding-bottom: 20px;
-
-      &:hover {
-        overflow-y: auto;
-      }
     }
   }
 
@@ -81,8 +73,6 @@ const setSideNavMenu = (list) => {
       position: relative;
       display: flex;
       justify-content: space-between;
-      background-color: #001529;
-
       .top-nav {
         flex: 1;
         margin-right: 20px;
@@ -99,7 +89,6 @@ const setSideNavMenu = (list) => {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #fff;
         flex-shrink: 0;
         line-height: 64px;
         margin-right: 30px;
@@ -109,13 +98,6 @@ const setSideNavMenu = (list) => {
     .app-center {
       padding: 20px;
       min-height: auto;
-      background: #f0eeee;
-
-      .content-center {
-        background: #fff;
-        min-height: calc(100vh - @topH - 40px);
-        padding: 20px;
-      }
     }
   }
 }

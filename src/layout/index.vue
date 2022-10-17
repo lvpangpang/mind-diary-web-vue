@@ -42,11 +42,15 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next()
       // 登录后请求的全局接口
-      state.userInfo = await Api.getUserInfo()
+      if (!state.userInfo.id) {
+        state.userInfo = await Api.getUserInfo()
+      }
     }
   }
   state.showMenu = !noMenu.includes(to.path)
 })
+
+
 </script>
 
 <style scoped>
