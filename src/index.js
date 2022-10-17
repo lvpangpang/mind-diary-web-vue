@@ -6,10 +6,10 @@ import { http, getStorage } from "js-common-library"
 import { loginOut } from './tools'
 import App from '@/layout/index.vue'
 import router from '@/router'
+import store from '@/store'
 import './assets/main.css'
 
 const { MODE } =import.meta.env
-console.log(getStorage('token'))
 http.setConfig({
   baseURL:
     MODE === "development"
@@ -43,5 +43,6 @@ http.setConfig({
 
 const app = createApp(App)
 app.use(router)
+app.use(store)
 app.use(ElementPlus)
 app.mount('#app')

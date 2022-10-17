@@ -55,6 +55,7 @@ const setSideNavMenu = (list) => {
       text-overflow: ellipsis;
       text-align: center;
       line-height: @topH;
+      border-bottom: 1px solid #dcdfe6;
     }
 
     .side-nav {
@@ -98,6 +99,17 @@ const setSideNavMenu = (list) => {
     .app-center {
       padding: 20px;
       min-height: auto;
+      background: #f0f2f5;
+      min-height: 600px;
+      .center-main {
+        background: #fff;
+        padding: 20px;
+      }
+      .breadcrumb-box {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #dedede;
+        margin-bottom: 30px;
+      }
     }
   }
 }

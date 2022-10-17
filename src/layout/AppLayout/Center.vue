@@ -1,8 +1,13 @@
 <template>
-  <el-breadcrumb>
-    <el-breadcrumb-item v-for="item in breadcrumb">{{item.title}}</el-breadcrumb-item>
-  </el-breadcrumb>
-  <slot></slot>
+  <div class="center-main">
+    <div class="breadcrumb-box">
+      <el-breadcrumb>
+        <el-breadcrumb-item v-for="item in breadcrumb">{{item.title}}</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <slot></slot>
+  </div>
+
 </template>
 
 <script setup>

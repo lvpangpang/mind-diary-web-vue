@@ -19,7 +19,7 @@
 
 <script setup>
 import { RouterView, useRouter } from 'vue-router'
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { getStorage } from 'js-common-library'
 import App from './App/index.vue'
 import AppLayout from './AppLayout/index.vue'
@@ -41,13 +41,15 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/login' })
     } else {
       next()
-      // 登录后请求的全局接口
-      if (!state.userInfo.id) {
-        state.userInfo = await Api.getUserInfo()
-      }
     }
   }
   state.showMenu = !noMenu.includes(to.path)
+})
+
+onMounted(async () => {
+  if (getStorage('token')) {
+    state.userInfo = await Api.getUserInfo()
+  }
 })
 
 
