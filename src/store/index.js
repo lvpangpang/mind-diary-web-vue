@@ -2,13 +2,12 @@ import { createStore } from "vuex"
 
 export default createStore({
   state: {
-    search: { name: 1 },
+    searchParams: {},
   },
   mutations: {
-    changeSearch(state, data) {
+    changeSearchParams(state, data) {
       console.log(data)
-      state.search = data
-    }
-  },
-  actions: {},
+      state.searchParams = data
+    },
+  }
 })

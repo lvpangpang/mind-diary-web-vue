@@ -1,22 +1,22 @@
 <template>
-  <el-form ref="formInlineRef" :inline="true" :model="formInline">
+  <el-form ref="formRef" :inline="true" :model="formModel">
     <el-form-item label="订单编号" prop="orderNo">
-      <el-input v-model="formInline.orderNo" placeholder="订单编号" />
+      <el-input v-model="formModel.orderNo" placeholder="订单编号" />
     </el-form-item>
     <el-form-item label="城市" prop="cityCode">
-      <el-select v-model="formInline.cityCode" placeholder="城市">
+      <el-select v-model="formModel.cityCode" placeholder="城市">
         <el-option label="杭州" value="0571" />
         <el-option label="北京" value="0110" />
       </el-select>
     </el-form-item>
-    <el-space class="search-btn-box" size="16">
-      <el-button type="primary" @click="onSubmit(formInlineRef)">搜索</el-button>
-      <el-button type="primary" @click="rest(formInlineRef)">重置</el-button>
+    <el-space class="searchParams-btn-box" :size="16">
+      <el-button type="primary" @click="onSubmit(formRef)">搜索</el-button>
+      <el-button type="primary" @click="rest(formRef)">重置</el-button>
     </el-space>
   </el-form>
 
   <el-table :border="true" v-loading="state.loading" :data="state.list" style="width: 100%">
-    <el-table-column v-for="item in List" :prop="item.dataIndex" :label="item.title" :fixed="item.fixed" />
+    <el-table-column v-for="item in List" :prop="item.dataIndex" :label="item.title" :fixed="item.fixed" width="200" />
     <el-table-column label="操作" fixed="right" width="150">
       <RouterLink class="link" :to="`/order-center/manage/order-list/${89798789}`">详情</RouterLink>
     </el-table-column>
@@ -26,46 +26,47 @@
     <el-pagination :page-size="10" layout="prev, pager, next, jumper" :current-page="state.page"
       @current-change="currentChange" :total="state.total" />
   </div>
-  {{
-  search.name
-  }}
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useStore } from 'vuex'
 import List from './List'
 import Api from './Api';
 
 const store = useStore()
-const { search } = toRefs(store.state)
+const { searchParams } = store.state // 把搜索条件保存在store里面
 
-store.commit('changeSearch', {name: 2})
+const formRef = ref()
+let timer = null
+let formModel = reactive({})
+
 let state = reactive({
   list: [],
   total: 0,
   page: 1,
   loading: true
 })
-const formInlineRef = ref()
-const formInline = reactive({
-  orderNo: '',
-  cityCode: '',
-})
 
-// 搜索
+// 搜索-简单的节流处理
 const onSubmit = (formEl) => {
-  if (!formEl) return
-  formEl.validate(async (valid) => {
-    if (valid) {
-      getData({ ...formInline, pageNum: 1 })
-    }
-  })
+  if (timer) return
+  timer = setTimeout(() => {
+    formEl.validate(async (valid) => {
+      if (valid) {
+        store.commit('changeSearchParams', formModel)
+        getData({ ...formModel, pageNum: 1 })
+        clearTimeout(timer)
+        timer = null
+      }
+    })
+  }, 300)
 }
 
 // 重置
 const rest = (form) => {
+  store.commit('changeSearchParams', {})
   form.resetFields()
 }
 
@@ -75,9 +76,9 @@ const currentChange = (current) => {
 }
 
 // 获取数据
-const getData = async (...params) => {
+const getData = async (params) => {
   state.loading = true
-  const { list, total, page } = await Api.list(...params)
+  const { list, total, page } = await Api.list(params)
   state.list = list
   state.total = total
   state.page = page
@@ -85,13 +86,20 @@ const getData = async (...params) => {
 }
 
 onMounted(() => {
-  getData()
+  // 不能直接赋值 否则formModal会失去响应式
+  const keys = Object.keys(searchParams)
+  if (keys.length) {
+    keys.forEach((item) => {
+      formModel[item] = searchParams[item]
+    })
+  }
+  getData({ ...searchParams, pageNum: 1 })
 })
 
 </script>
 
 <style lang="less" scoped>
-.search-btn-box,
+.searchParams-btn-box,
 .pagination-box {
   width: 100%;
   display: flex;

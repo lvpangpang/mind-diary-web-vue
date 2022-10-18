@@ -29,18 +29,16 @@ import { reactive, ref } from 'vue'
 import { setStorage } from "js-common-library"
 import Api from "./Api"
 
+const { MODE } = import.meta.env
 const ruleFormRef = ref()
-const ruleForm = reactive({
-  phone: '',
-  verifyCode: ''
-})
+const ruleForm = reactive({})
 const login = (formEl) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
     if (valid) {
       const { token } = await Api.login(ruleForm)
       setStorage("token", token)
-      const url = "/"
+      const url = MODE === "development" ? "/" : "/mind-diary-web-vue"
       window.location.href = url
     }
   })
