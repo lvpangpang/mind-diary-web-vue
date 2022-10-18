@@ -5,8 +5,7 @@
     </el-form-item>
     <el-form-item label="城市" prop="cityCode">
       <el-select v-model="formModel.cityCode" placeholder="城市">
-        <el-option label="杭州" value="0571" />
-        <el-option label="北京" value="0110" />
+        <el-option v-for="item in getBaseType('city')" :label="item.label" :value="item.key" />
       </el-select>
     </el-form-item>
     <el-space class="searchParams-btn-box" :size="16">
@@ -33,7 +32,8 @@ import { reactive, ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useStore } from 'vuex'
 import List from './List'
-import Api from './Api';
+import Api from './Api'
+import { getBaseType } from '@/tools'
 
 const store = useStore()
 const { searchParams } = store.state // 把搜索条件保存在store里面

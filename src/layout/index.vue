@@ -20,7 +20,7 @@
 <script setup>
 import { RouterView, useRouter } from 'vue-router'
 import { reactive, onMounted } from 'vue'
-import { getStorage } from 'js-common-library'
+import { getStorage, setStorage } from 'js-common-library'
 import App from './App/index.vue'
 import AppLayout from './AppLayout/index.vue'
 import Api from "./Api";
@@ -49,6 +49,8 @@ router.beforeEach(async (to, from, next) => {
 onMounted(async () => {
   if (getStorage('token')) {
     state.userInfo = await Api.getUserInfo()
+    const data =  await Api.getDataTypes()
+    setStorage('dataType', data)
   }
 })
 
