@@ -1,117 +1,45 @@
 <template>
-  <el-form ref="formRef" :inline="true" :model="formModel">
-    <el-form-item label="订单编号" prop="orderNo">
-      <el-input v-model="formModel.orderNo" placeholder="订单编号" />
-    </el-form-item>
-    <el-form-item label="城市" prop="cityCode">
-      <el-select v-model="formModel.cityCode" placeholder="城市">
-        <el-option v-for="item in getBaseType('city')" :label="item.label" :value="item.key" />
-      </el-select>
-    </el-form-item>
-    <el-space class="searchParams-btn-box" :size="16">
-      <el-button type="primary" @click="onSubmit(formRef)">搜索</el-button>
-      <el-button type="primary" @click="rest(formRef)">重置</el-button>
-    </el-space>
-  </el-form>
-
-  <el-table :border="true" v-loading="state.loading" :data="state.list" style="width: 100%">
-    <el-table-column v-for="item in List" :prop="item.dataIndex" :label="item.title" :fixed="item.fixed" width="200" />
-    <el-table-column label="操作" fixed="right" width="150">
-      <RouterLink class="link" :to="`/order-center/manage/order-list/${89798789}`">详情</RouterLink>
-    </el-table-column>
-  </el-table>
-
-  <div class="pagination-box">
-    <el-pagination :page-size="10" layout="prev, pager, next, jumper" :current-page="state.page"
-      @current-change="currentChange" :total="state.total" />
-  </div>
+  <SearchTable ref="ref1" :formModel="formModel" :list="List" :getData="Api.list">
+    <template #searchParams>
+      <el-form-item label="订单编号" prop="orderNo">
+        <el-input v-model="formModel.orderNo" placeholder="订单编号" />
+      </el-form-item>
+      <el-form-item label="城市" prop="cityCode">
+        <el-select placeholder="城市" filterable v-model="formModel.cityCode">
+          <el-option v-for="item in getBaseType('city')" :label="item.label" :value="item.key" />
+        </el-select>
+      </el-form-item>
+    </template>
+    <template #searchButton>
+      <el-button type="primary" @click="getParams()">导出</el-button>
+    </template>
+    <template #column>
+      <el-table-column label="操作" fixed="right" width="150">
+        <template v-slot="scope">
+          <RouterLink class="link" :to="`/order-center/manage/order-list/${scope.row.orderNo}`">详情</RouterLink>
+        </template>
+      </el-table-column>
+    </template>
+  </SearchTable>
 </template>
-
+  
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useStore } from 'vuex'
+import SearchTable from '../../components/SearchTable/index.vue'
 import List from './List'
 import Api from './Api'
 import { getBaseType } from '@/tools'
 
-const store = useStore()
-const { searchParams } = store.state // 把搜索条件保存在store里面
-
-const formRef = ref()
-let timer = null
-let formModel = reactive({})
-
-let state = reactive({
-  list: [],
-  total: 0,
-  page: 1,
-  loading: true
-})
-
-// 搜索-简单的节流处理
-const onSubmit = (formEl) => {
-  if (timer) return
-  timer = setTimeout(() => {
-    formEl.validate(async (valid) => {
-      if (valid) {
-        store.commit('changeSearchParams', formModel)
-        getData({ ...formModel, pageNum: 1 })
-        clearTimeout(timer)
-        timer = null
-      }
-    })
-  }, 300)
+const formModel = ref({})
+const ref1 = ref()
+// 获取SearchTable的搜索条件对象，可以用在导出等个性化需求中
+function getParams() {
+  console.log(ref1.value.formModel)
 }
-
-// 重置
-const rest = (form) => {
-  store.commit('changeSearchParams', {})
-  form.resetFields()
-}
-
-// 页码切换
-const currentChange = (current) => {
-  getData({ pageNum: current })
-}
-
-// 获取数据
-const getData = async (params) => {
-  state.loading = true
-  const { list, total, page } = await Api.list(params)
-  state.list = list
-  state.total = total
-  state.page = page
-  state.loading = false
-}
-
-onMounted(() => {
-  // 不能直接赋值 否则formModal会失去响应式
-  const keys = Object.keys(searchParams)
-  if (keys.length) {
-    keys.forEach((item) => {
-      formModel[item] = searchParams[item]
-    })
-  }
-  getData({ ...searchParams, pageNum: 1 })
-})
-
 </script>
-
+  
 <style lang="less" scoped>
-.searchParams-btn-box,
-.pagination-box {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.pagination-box {
-  margin-top: 20px;
-}
-
 .link {
   color: #409eff;
   text-decoration: none;

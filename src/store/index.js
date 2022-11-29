@@ -6,7 +6,6 @@ export default createStore({
   },
   mutations: {
     changeSearchParams(state, data) {
-      console.log(data)
       state.searchParams = data
     },
   }
