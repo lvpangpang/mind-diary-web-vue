@@ -11,7 +11,7 @@
       </el-form-item>
     </template>
     <template #searchButton>
-      <el-button type="primary" @click="getParams()">导出</el-button>
+      <Export :getBlob="getExportData">导出</Export>
     </template>
     <template #column>
       <el-table-column label="操作" fixed="right" width="150">
@@ -26,7 +26,8 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import SearchTable from '../../components/SearchTable/index.vue'
+import SearchTable from '@/components/SearchTable/index.vue'
+import Export from '@/components/Export/index.vue'
 import List from './List'
 import Api from './Api'
 import { getBaseType } from '@/tools'
@@ -35,7 +36,18 @@ const formModel = ref({})
 const ref1 = ref()
 // 获取SearchTable的搜索条件对象，可以用在导出等个性化需求中
 function getParams() {
-  console.log(ref1.value.formModel)
+  return ref1.value.formModel
+}
+
+// 导出
+function getExportData() {
+  return Api.export({
+    params: { ...getParams() },
+    responseType: "blob",
+    transformResult(res) {
+      return res.data
+    },
+  })
 }
 </script>
   

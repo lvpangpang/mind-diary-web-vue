@@ -1,6 +1,6 @@
 <template>
   <el-button @click="handleClick" :loading="loading">
-    <slot name="children"></slot>
+    <slot></slot>
   </el-button>
 </template>
 

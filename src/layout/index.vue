@@ -21,8 +21,8 @@
 import { RouterView, useRouter } from 'vue-router'
 import { reactive, onMounted } from 'vue'
 import { getStorage, setStorage } from 'js-common-library'
-import App from './App/index.vue'
-import AppLayout from './AppLayout/index.vue'
+import App from '@/components/App/index.vue'
+import AppLayout from '@/components/AppLayout/index.vue'
 import Api from "./Api";
 import User from './User.vue'
 

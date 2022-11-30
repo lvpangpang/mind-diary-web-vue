@@ -1,15 +1,15 @@
 <template>
-  <div>订单详情</div>
+  <div :style="{ marginBottom: 20 + 'px' }">订单详情</div>
   <Button type="primary" :click="getData">
-    <template #children>搜索</template>
+    搜索
   </Button>
 </template>
 
 <script setup>
-import Button from '../../../components/Button/index.vue'
+import Button from '@/components/Button/index.vue'
 
-function getData() {
-  return new Promise((resolve) => {
+async function getData() {
+  await new Promise((resolve) => {
     setTimeout(() => {
       resolve()
     }, 2000)
