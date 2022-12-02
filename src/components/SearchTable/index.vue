@@ -21,9 +21,10 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from 'vue'
-import { useStore } from 'vuex'
+import { reactive, ref, onMounted, onUnmounted } from 'vue'
+import { Store } from './store'
 
+const store = Store()
 const props = defineProps(['formModel', 'list', 'getData'])
 const formModel = reactive(props.formModel)
 const formRef = ref()
@@ -41,7 +42,7 @@ const onSubmit = (formEl) => {
   timer = setTimeout(() => {
     formEl.validate(async (valid) => {
       if (valid) {
-        store.commit('changeSearchParams', formModel)
+        store.editSearchParams(formModel)
         getData()
         clearTimeout(timer)
         timer = null
@@ -52,7 +53,7 @@ const onSubmit = (formEl) => {
 
 // 重置
 const rest = (form) => {
-  store.commit('changeSearchParams', {})
+  store.editSearchParams({})
   form.resetFields()
 }
 
@@ -71,20 +72,20 @@ const getData = async (params) => {
   state.loading = false
 }
 
-const store = useStore()
-const { searchParams } = store.state // 把搜索条件保存在store里面
-
 onMounted(() => {
   // 不能直接赋值 否则formModal会失去响应式
-  const keys = Object.keys(searchParams)
+  const keys = Object.keys(store.searchParams)
   if (keys.length) {
     keys.forEach((item) => {
-      formModel[item] = searchParams[item]
+      formModel[item] = store.searchParams[item]
     })
   }
   getData()
 })
 
+
+onUnmounted(() => {
+})
 
 defineExpose({
   formModel

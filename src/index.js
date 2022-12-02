@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { ElMessage } from 'element-plus'
@@ -6,7 +7,6 @@ import { http, getStorage } from "js-common-library"
 import { loginOut } from './tools'
 import App from '@/layout/index.vue'
 import router from '@/router'
-import store from '@/store'
 import './assets/main.css'
 
 const { MODE } =import.meta.env
@@ -41,8 +41,9 @@ http.setConfig({
   },
 })
 
+const pinia = createPinia()
 const app = createApp(App)
 app.use(router)
-app.use(store)
+app.use(pinia)
 app.use(ElementPlus)
 app.mount('#app')
